@@ -18,7 +18,7 @@ app.get('/', (req, res) => {
 
 
 
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const uri = "mongodb+srv://solvedIt:cti8uYBy0JUK1qKt@cluster0.8mn4lkn.mongodb.net/?retryWrites=true&w=majority";
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -38,19 +38,48 @@ async function run() {
         const taskCollection = client.db("SolvedIt").collection("task");
 
         // get all task
-        app.get('/task'async (req, res) => {
+        app.get('/task', async (req, res) => {
             const result = await taskCollection.find().toArray()
             res.send(result)
         })
-        
+
         // new task add api
         app.post('/task', async (req, res) => {
             const newTask = req.body
             const result = await taskCollection.insertOne(newTask)
             res.send(result)
         })
-
-
+        // make ongoing 
+        app.patch('/task/:id', async (req, res) => {
+            const id = req.params.id
+            const query = { _id: new ObjectId(id) }
+            const updateDoc = {
+                $set: {
+                    ongoing: true
+                }
+            }
+            const result = await taskCollection.updateOne(query, updateDoc)
+            res.send(result)
+        })
+        // task make completed  
+        app.patch('/taskCompleted/:id', async (req, res) => {
+            const id = req.params.id
+            const query = { _id: new ObjectId(id) }
+            const updateDoc = {
+                $set: {
+                    completed: true
+                }
+            }
+            const result = await taskCollection.updateOne(query, updateDoc)
+            res.send(result)
+        })
+        // delete task
+        app.delete('/task/:id', async (req, res) => {
+            const id = req.params.id
+            const query = { _id: new ObjectId(id) }
+            const result = await taskCollection.deleteOne(query)
+            res.send(result)
+        })
 
 
         // Send a ping to confirm a successful connection
