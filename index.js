@@ -53,6 +53,23 @@ async function run() {
             res.send(result)
         })
 
+        // update task  
+        app.patch('/updateTask/:id', async (req, res) => {
+            const id = req.params.id
+            const UpdateData = req.body
+            const query = { _id: new ObjectId(id) }
+            const updateDoc = {
+                $set: {
+                    tittle: UpdateData.tittle,
+                    deadline: UpdateData.deadline,
+                    desc: UpdateData.desc,
+                    priority: UpdateData.priority
+                }
+            }
+            const result = await taskCollection.updateOne(query, updateDoc)
+            res.send(result)
+        })
+
         // new task add api
         app.post('/task', async (req, res) => {
             const newTask = req.body
@@ -71,6 +88,7 @@ async function run() {
             const result = await taskCollection.updateOne(query, updateDoc)
             res.send(result)
         })
+
         // task make completed  
         app.patch('/taskCompleted/:id', async (req, res) => {
             const id = req.params.id
