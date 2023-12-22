@@ -36,12 +36,12 @@ async function run() {
         // await client.connect();
 
         const taskCollection = client.db("SolvedIt").collection("task");
+        const newsLaterCollection = client.db("SolvedIt").collection("newsLatter");
 
         // get all task
         app.get('/task/:email', async (req, res) => {
             const email = req.params.email
             const filter = { email: email }
-            console.log(email)
             const result = await taskCollection.find(filter).toArray()
             res.send(result)
         })
@@ -106,6 +106,14 @@ async function run() {
             const id = req.params.id
             const query = { _id: new ObjectId(id) }
             const result = await taskCollection.deleteOne(query)
+            res.send(result)
+        })
+
+        // newsLater
+        app.post('/newsLatter', async (req, res) => {
+
+            const email = req.body
+            const result = await newsLaterCollection.insertOne(email)
             res.send(result)
         })
 
