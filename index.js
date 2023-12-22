@@ -38,8 +38,18 @@ async function run() {
         const taskCollection = client.db("SolvedIt").collection("task");
 
         // get all task
-        app.get('/task', async (req, res) => {
-            const result = await taskCollection.find().toArray()
+        app.get('/task/:email', async (req, res) => {
+            const email = req.params.email
+            const filter = { email: email }
+            console.log(email)
+            const result = await taskCollection.find(filter).toArray()
+            res.send(result)
+        })
+        // get single task
+        app.get('/getTask/:id', async (req, res) => {
+            const id = req.params.id
+            const filter = { _id: new ObjectId(id) }
+            const result = await taskCollection.findOne(filter)
             res.send(result)
         })
 
