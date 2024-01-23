@@ -1,7 +1,7 @@
 const express = require('express')
 const app = express()
 const cors = require('cors')
-const port = process.env.PORT || 5000
+const port = process.env.PORT || 5001
 
 
 app.use(cors())
@@ -111,7 +111,6 @@ async function run() {
 
         // newsLater
         app.post('/newsLatter', async (req, res) => {
-
             const email = req.body
             const result = await newsLaterCollection.insertOne(email)
             res.send(result)
